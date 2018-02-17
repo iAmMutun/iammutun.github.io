@@ -5,10 +5,11 @@
 <title>Touch Test</title>
 </head>
 <style>
-body{padding:0;margin:0;background:#ccc}
-#canvas{background:#fff}
-#preview{position:absolute;top:0;left:0}
-p{font-size:20pt;}
+body{background:#ccc}
+canvas{display:block;margin:auto}
+#canvas{background:#fff;box-shadow:0 0 4px 2px #999}
+#preview{margin-top:-500px;pointer-events:none}
+p{width:800px;margin:auto;font-size:20pt;}
 </style>
 <body>
 <canvas id="canvas" width="800" height="500"></canvas>
@@ -26,28 +27,37 @@ var force = document.getElementById('force');
 var radius = document.getElementById('radius');
 var canvas_context = canvas.getContext("2d");
 var preview_context = preview.getContext("2d");
-var lastX, lastY;
-preview.addEventListener('touchstart', function(e){
+var last_point;
+
+canvas.addEventListener('touchstart', function(e){
+    var b = canvas.getBoundingClientRect();
     var t = e.changedTouches[0];
-    lastX = t.clientX;
-    lastY = t.clientY;
+    var x = t.pageX - b.x;
+    var y = t.pageY - b.y;
+
+    last_point = {x:x, y:y};
     e.preventDefault();
 }, false);
-preview.addEventListener('touchmove', function(e){
+canvas.addEventListener('touchmove', function(e){
+    var b = canvas.getBoundingClientRect();
     var t = e.changedTouches[0];
-    coord.innerHTML = 'Coord: ' + t.clientX +',' + t.clientY;
+    var x = t.pageX - b.x;
+    var y = t.pageY - b.y;
+
+    coord.innerHTML = 'Coord: ' + t.pageX +',' + t.pageY;
     force.innerHTML = ' Force:' + t.force;
     radius.innerHTML = 'Radius: ' + t.radiusX  +',' + t.radiusY;
+
     preview_context.beginPath();
     preview_context.lineWidth = t.force*10;
-    preview_context.moveTo(lastX, lastY);
-    preview_context.lineTo(t.clientX, t.clientY);
+    preview_context.moveTo(last_point.x, last_point.y);
+    preview_context.lineTo(x, y);
     preview_context.stroke();
-    lastX = t.clientX;
-    lastY = t.clientY;
+
+    last_point = {x:x, y:y};
     e.preventDefault();
 }, false);
-preview.addEventListener('touchend', function(e){
+canvas.addEventListener('touchend', function(e){
     canvas_context.drawImage(preview, 0, 0);
     preview_context.clearRect(0, 0, preview.width, preview.height);
     e.preventDefault();
