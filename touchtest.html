@@ -50,6 +50,7 @@ canvas.addEventListener('touchmove', function(e){
 
     preview_context.beginPath();
     preview_context.lineWidth = t.force*10;
+    preview_context.lineCap = "round";
     preview_context.moveTo(last_point.x, last_point.y);
     preview_context.lineTo(x, y);
     preview_context.stroke();
