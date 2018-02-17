@@ -5,12 +5,14 @@
 <title>Touch Test</title>
 </head>
 <style>
-body{padding:0;margin:0}
-canvas{background:#ccc}
+body{padding:0;margin:0;background:#ccc}
+#canvas{background:#fff}
+#preview{position:absolute;top:0;left:0}
 p{font-size:20pt;}
 </style>
 <body>
 <canvas id="canvas" width="800" height="500"></canvas>
+<canvas id="preview" width="800" height="500"></canvas>
 <p><button id="clear">Clear</button></p>
 <p id="coord" >Coord</p>
 <p id="force" >Force</p>
@@ -18,32 +20,36 @@ p{font-size:20pt;}
 <script>
 var clear = document.getElementById('clear');
 var canvas = document.getElementById('canvas');
+var preview = document.getElementById('preview');
 var coord = document.getElementById('coord');
 var force = document.getElementById('force');
 var radius = document.getElementById('radius');
-var context = canvas.getContext("2d");
+var canvas_context = canvas.getContext("2d");
+var preview_context = preview.getContext("2d");
 var lastX, lastY;
-canvas.addEventListener('touchstart', function(e){
+preview.addEventListener('touchstart', function(e){
     var t = e.changedTouches[0];
     lastX = t.clientX;
     lastY = t.clientY;
     e.preventDefault();
 }, false);
-canvas.addEventListener('touchmove', function(e){
+preview.addEventListener('touchmove', function(e){
     var t = e.changedTouches[0];
     coord.innerHTML = 'Coord: ' + t.clientX +',' + t.clientY;
     force.innerHTML = ' Force:' + t.force;
     radius.innerHTML = 'Radius: ' + t.radiusX  +',' + t.radiusY;
-    context.beginPath();
-    context.lineWidth = t.force*10;
-    context.moveTo(lastX, lastY);
-    context.lineTo(t.clientX, t.clientY);
-    context.stroke();
+    preview_context.beginPath();
+    preview_context.lineWidth = t.force*10;
+    preview_context.moveTo(lastX, lastY);
+    preview_context.lineTo(t.clientX, t.clientY);
+    preview_context.stroke();
     lastX = t.clientX;
     lastY = t.clientY;
     e.preventDefault();
 }, false);
-canvas.addEventListener('touchend', function(e){
+preview.addEventListener('touchend', function(e){
+    canvas_context.drawImage(preview, 0, 0);
+    preview_context.clearRect(0, 0, preview.width, preview.height);
     e.preventDefault();
 }, false);
 clear.addEventListener('click', function(e){
