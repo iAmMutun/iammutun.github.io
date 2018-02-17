@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Touch Test</title>
+</head>
+<style>
+body{padding:0;margin:0}
+canvas{background:#ccc}
+p{font-size:20pt;}
+</style>
+<body>
+<canvas id="canvas" width="800" height="500"></canvas>
+<p id="coord" >Coord</p>
+<p id="force" >Force</p>
+<p id="radius" >Radius</p>
+<script>
+var canvas = document.getElementById('canvas');
+var coord = document.getElementById('coord');
+var force = document.getElementById('force');
+var radius = document.getElementById('radius');
+var context = canvas.getContext("2d");
+var lastX, lastY;
+canvas.addEventListener('touchstart', function(e){
+    var t = e.changedTouches[0];
+    lastX = t.clientX;
+    lastY = t.clientY;
+    e.preventDefault();
+}, false);
+canvas.addEventListener('touchmove', function(e){
+    var t = e.changedTouches[0];
+    coord.innerHTML = 'Coord: ' + t.clientX +',' + t.clientY;
+    force.innerHTML = ' Force:' + t.force;
+    radius.innerHTML = 'Radius: ' + t.radiusX  +',' + t.radiusY;
+    context.beginPath();
+    context.lineWidth = t.force*10;
+    context.moveTo(lastX, lastY);
+    context.lineTo(t.clientX, t.clientY);
+    context.stroke();
+    lastX = t.clientX;
+    lastY = t.clientY;
+    e.preventDefault();
+}, false);
+canvas.addEventListener('touchend', function(e){
+    e.preventDefault();
+}, false);
+</script>
+</body>
+</html>
