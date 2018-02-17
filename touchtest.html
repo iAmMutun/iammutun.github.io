@@ -11,10 +11,12 @@ p{font-size:20pt;}
 </style>
 <body>
 <canvas id="canvas" width="800" height="500"></canvas>
+<p><button id="clear">Clear</button></p>
 <p id="coord" >Coord</p>
 <p id="force" >Force</p>
 <p id="radius" >Radius</p>
 <script>
+var clear = document.getElementById('clear');
 var canvas = document.getElementById('canvas');
 var coord = document.getElementById('coord');
 var force = document.getElementById('force');
@@ -43,6 +45,9 @@ canvas.addEventListener('touchmove', function(e){
 }, false);
 canvas.addEventListener('touchend', function(e){
     e.preventDefault();
+}, false);
+clear.addEventListener('click', function(e){
+    context.clearRect(0, 0, canvas.width, canvas.height);
 }, false);
 </script>
 </body>
