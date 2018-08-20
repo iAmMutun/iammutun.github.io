@@ -42,8 +42,8 @@ h1 a{
 }
 h2{
 margin:0;
-padding:0;
-min-width:10%;
+padding:5px;
+min-width:30%;
 position:fixed;
 bottom:0;
 font-family:sans-serif;
@@ -64,12 +64,12 @@ left:0;
 }
 #credit{
 right:0;
-animation: credit-disappearr 20s ease-in-out 1;
+animation: credit-disappearr 16s ease-in-out 1;
 }
 
 @keyframes credit-disappearr {
 0%{opacity:1}
-95%{opacity:1}
+93.75%{opacity:1}
 100%{opacity:0}
 }
 
@@ -86,16 +86,16 @@ stroke-width: 0.5px;
                   </g>
                 </mask>
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style="stop-color:#ff0a0a;stop-opacity:1" />
-                    <stop offset="20%" style="stop-color:#f1ff0a;stop-opacity:1" />
-                    <stop offset="90%" style="stop-color:#d923b9;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#050d61;stop-opacity:1" />
+                    <stop offset="0%" style="stop-color:#ff3471;stop-opacity:.4" />
+                    <stop offset="40%" style="stop-color:#e4ff5f;stop-opacity:.6" />
+                    <stop offset="80%" style="stop-color:#ff5bb5;stop-opacity:.4" />
+                    <stop offset="100%" style="stop-color:#310058;stop-opacity:.5" />
                 </linearGradient>
             </defs>
             <rect x="0" y="0" width="100%" height="100%" fill="url(#gradient)" mask="url(#mask)"></rect>
         </svg>
 <h1 style="opacity: 0;">Thanks</h1>
-<h2 id="length">-</h2>
+<h2 id="logger"></h2>
 
 
 <h2 id="credit">Forked from <a href="https://codepen.io/zapplebee/pen/gbNbZE">HTML 5 Microphone Visualizer</a> by Zachary Skalko</h2>
@@ -108,16 +108,23 @@ stroke-width: 0.5px;
     var path;
     var report = 0;
 
-var h1 = document.getElementById('length');  
+var logger = document.getElementById('logger');  
 
 
 
 
+function hideMouse()
+{
+    document.body.style.cursor = "none";
+}
+var hideMouseInt = setInterval(hideMouse, 5000);
 
 
-
-
-
+document.onmousemove = function () {
+    document.body.style.cursor = "";
+    clearInterval(hideMouseInt);
+    hideMouseInt = setInterval(hideMouse, 5000);
+};
 
 
 
@@ -188,7 +195,7 @@ var previousW = [];
             
     var thisW = [];
     
-    var bassCount = 0;
+    var highCount = 0;
     var count = 0;
     var power = 0;
 
@@ -206,11 +213,11 @@ thisW[i] = adjustedLength;
       
       if (diff > 0)
       {
-        power += diff;
         count++;
-        if (i < 50 && diff > 5)
+        if (diff > 16)
         {
-          bassCount ++;
+        power += diff;
+          highCount ++;
         }
       }
 
@@ -221,19 +228,15 @@ thisW[i] = adjustedLength;
 
 
 
-            if (bassCount >= 12)
+            if (highCount >= 8)
             {
-            hitIt(power / 255 / count);
+                hitIt(Math.min(1, Math.max(highCount / count, power / 100 / highCount)));
             }
-            else
-            {
-            //percentage = 0;
-            }
-            h1.innerHTML = count + '<br>' + power;
+            logger.innerHTML = count + '<br>' + highCount + '<br>' + power + '<br>' + hitPercentage;
 
             document.body.style.backgroundColor = rgbToHex(currentColor);
             
-            previousW = thisW;
+            previousW = Object.assign(thisW);
 
 
 
@@ -258,6 +261,7 @@ thisW[i] = adjustedLength;
 
 
   var shouldHit = true;
+  var hitPercentage = 0;
 
 
 
@@ -266,22 +270,22 @@ function hitIt(percentage)
   if (!shouldHit)
       return;
   shouldHit = false;
-
+  hitPercentage = percentage;
   var a, b;
-  if (percentage > 0.1)
+  if (percentage > 0.55)
     {
-      a = 0.2;
-      b = 0.8;
+      a = 0.15;
+      b = 0.85;
     }
-  else if (percentage > 0.05)
+  else if (percentage > 0.35)
     {
-      a = 0.3;
-      b = 0.5;
+      a = 0.25;
+      b = 0.65;
     }
   else
     {
-      a = 0.2;
-      b = 0.4;
+      a = 0.25;
+      b = 0.5;
     }
   currentColor = randomColor();
   
@@ -317,6 +321,7 @@ function hitIt(percentage)
     currentColor.b *= 0.3;
   }
 
+  targetColor = Object.assign(currentColor);
   targetColor = currentColor;
   targetColor.r *= 0.5;
   targetColor.g *= 0.5;
@@ -327,25 +332,51 @@ function hitIt(percentage)
   }, 1000/6);
 
   clearInterval(periodicInt);
-  var periodicInt = setInterval(periodicColor, 1800);
+  var periodicInt = setInterval(periodicColor, 3600);
 }
 
 function periodicColor(){
   targetColor = randomColor();
-  targetColor.r *= 0.2;
-  targetColor.g *= 0.2;
-  targetColor.b *= 0.2;
-  targetColor.r += 0.2;
-  targetColor.g += 0.2;
-  targetColor.b += 0.2;
+  var select = Math.floor(Math.random() * 6);
+  if (select == 0 || select == 1 || select == 3)
+  {
+    targetColor.r *= 0.2;
+    targetColor.r += 0.2;
+  }
+  else
+  {
+    targetColor.r *= 0.2;
+  }
+  
+  if (select == 1 || select == 2 || select == 4)
+  {
+    targetColor.g *= 0.2;
+    targetColor.g += 0.2;
+  }
+  else
+  {
+    targetColor.g *= 0.2;
+  }
+  
+  if (select == 0 || select == 2 || select == 5)
+  {
+    targetColor.b *= 0.2;
+    targetColor.b += 0.2;
+  }
+  else
+  {
+    targetColor.b *= 0.2;
+  }
 }
 
-var periodicInt = setInterval(periodicColor, 1800);
-  
+var periodicInt = setInterval(periodicColor, 3600);
+periodicColor();
+currentColor = Object.assign(targetColor);
+
 setInterval(function(){
-  currentColor.r = targetColor.r * 0.02 + currentColor.r * 0.98;
-  currentColor.g = targetColor.g * 0.02 + currentColor.g * 0.98;
-  currentColor.b = targetColor.b * 0.02 + currentColor.b * 0.98;
+  currentColor.r = targetColor.r * 0.01 + currentColor.r * 0.99;
+  currentColor.g = targetColor.g * 0.01 + currentColor.g * 0.99;
+  currentColor.b = targetColor.b * 0.01 + currentColor.b * 0.99;
 }, 1000/60);
   
 
