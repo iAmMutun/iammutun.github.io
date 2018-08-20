@@ -130,9 +130,6 @@ function randomColor() {
 }
   
 var previousW = [];
-  
-  var shouldHit = false;
-  var hitPercentage = 0;
 
 
 
@@ -212,8 +209,7 @@ thisW[i] = adjustedLength;
 
             if (bassCount >= 12)
             {
-            shouldHit = true;
-            hitPercentage = Math.max(hitPercentage, power / 255 / count);
+            hitIt(power / 255 / count);
             }
             else
             {
@@ -247,21 +243,23 @@ thisW[i] = adjustedLength;
 
 
 
+  var shouldHit = true;
 
 
-function hitIt()
+
+function hitIt(percentage)
 {
   if (!shouldHit)
       return;
   shouldHit = false;
 
   var a, b;
-  if (hitPercentage > 0.1)
+  if (percentage > 0.1)
     {
       a = 0.2;
       b = 0.8;
     }
-  else if (hitPercentage > 0.05)
+  else if (percentage > 0.05)
     {
       a = 0.3;
       b = 0.5;
@@ -310,14 +308,13 @@ function hitIt()
   targetColor.g *= 0.5;
   targetColor.b *= 0.5;
   
-  clearInterval(hitInt);
-  var hitInt = setInterval(hitIt, 1000/6);
+  setTimeout(function(){
+    shouldHit = true;
+  }, 1000/6);
 
   clearInterval(periodicInt);
   var periodicInt = setInterval(periodicColor, 1800);
 }
-
-var hitInt = setInterval(hitIt, 1000/6);
 
 function periodicColor(){
   targetColor = randomColor();
