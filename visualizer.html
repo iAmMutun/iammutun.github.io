@@ -248,21 +248,20 @@ thisW[i] = adjustedLength;
 
 
 
-setInterval(function(){
-  if (shouldHit)
-      hitIt(hitPercentage);
-  shouldHit = false;
-}, 200);
 
-function hitIt(percentage)
+function hitIt()
 {
+  if (!shouldHit)
+      return;
+  shouldHit = false;
+
   var a, b;
-  if (percentage > 0.1)
+  if (hitPercentage > 0.1)
     {
       a = 0.2;
       b = 0.8;
     }
-  else if (percentage > 0.05)
+  else if (hitPercentage > 0.05)
     {
       a = 0.3;
       b = 0.5;
@@ -274,33 +273,53 @@ function hitIt(percentage)
     }
   currentColor = randomColor();
   
-  var select = Math.floor(Math.random() * 3);
+  var select = Math.floor(Math.random() * 6);
   
-  if (select == 0 || select == 1)
+  if (select == 0 || select == 1 || select == 3)
   {
     currentColor.r *= a;
     currentColor.r += b;
   }
+  else
+  {
+    currentColor.r *= 0.3;
+  }
   
-  if (select == 1 || select == 2)
+  if (select == 1 || select == 2 || select == 4)
   {
     currentColor.g *= a;
     currentColor.g += b;
   }
+  else
+  {
+    currentColor.g *= 0.3;
+  }
   
-  if (select == 0 || select == 2)
+  if (select == 0 || select == 2 || select == 5)
   {
     currentColor.b *= a;
     currentColor.b += b;
+  }
+  else
+  {
+    currentColor.b *= 0.3;
   }
 
   targetColor = currentColor;
   targetColor.r *= 0.5;
   targetColor.g *= 0.5;
   targetColor.b *= 0.5;
+  
+  clearInterval(hitInt);
+  var hitInt = setInterval(hitIt, 1000/6);
+
+  clearInterval(periodicInt);
+  var periodicInt = setInterval(periodicColor, 1800);
 }
 
-setInterval(function(){
+var hitInt = setInterval(hitIt, 1000/6);
+
+function periodicColor(){
   targetColor = randomColor();
   targetColor.r *= 0.2;
   targetColor.g *= 0.2;
@@ -308,12 +327,14 @@ setInterval(function(){
   targetColor.r += 0.2;
   targetColor.g += 0.2;
   targetColor.b += 0.2;
-}, 1500);
+}
+
+var periodicInt = setInterval(periodicColor, 1800);
   
 setInterval(function(){
-  currentColor.r = targetColor.r * 0.05 + currentColor.r * 0.95;
-  currentColor.g = targetColor.g * 0.05 + currentColor.g * 0.95;
-  currentColor.b = targetColor.b * 0.05 + currentColor.b * 0.95;
+  currentColor.r = targetColor.r * 0.02 + currentColor.r * 0.98;
+  currentColor.g = targetColor.g * 0.02 + currentColor.g * 0.98;
+  currentColor.b = targetColor.b * 0.02 + currentColor.b * 0.98;
 }, 1000/60);
   
 
