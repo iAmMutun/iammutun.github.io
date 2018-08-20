@@ -230,7 +230,7 @@ thisW[i] = adjustedLength;
 
             if (highCount >= 8)
             {
-                hitIt(Math.min(1, Math.max(highCount / count, power / 100 / highCount)));
+                hitIt(Math.min(1, Math.max(highCount / count, power / 64 / highCount)));
             }
             logger.innerHTML = count + '<br>' + highCount + '<br>' + power + '<br>' + hitPercentage;
 
@@ -332,7 +332,7 @@ function hitIt(percentage)
   }, 1000/6);
 
   clearInterval(periodicInt);
-  var periodicInt = setInterval(periodicColor, 3600);
+  periodicInt = setInterval(periodicColor, 3600);
 }
 
 function periodicColor(){
