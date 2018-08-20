@@ -281,29 +281,17 @@ function hitIt(percentage)
     currentColor.r *= a;
     currentColor.r += b;
   }
-  else
-  {
-    currentColor.r *= 0.3;
-  }
   
   if (select == 1 || select == 2)
   {
     currentColor.g *= a;
     currentColor.g += b;
   }
-  else
-  {
-    currentColor.g *= 0.3;
-  }
   
   if (select == 0 || select == 2)
   {
     currentColor.b *= a;
     currentColor.b += b;
-  }
-  else
-  {
-    currentColor.b *= 0.3;
   }
 
   targetColor = currentColor;
