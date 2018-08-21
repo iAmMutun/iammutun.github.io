@@ -332,9 +332,9 @@ function hitIt(percentage)
     currentColor.b *= 0.3;
   }
 
-  targetColor.r = currentColor.r * 0.3;
-  targetColor.g = currentColor.g * 0.3;
-  targetColor.b = currentColor.b * 0.3;
+  targetColor.r = currentColor.r * 0.2 + 0.1;
+  targetColor.g = currentColor.g * 0.2 + 0.1;
+  targetColor.b = currentColor.b * 0.2 + 0.1;
   
   setTimeout(function(){
     shouldHit = true;
@@ -385,9 +385,9 @@ currentColor.g = targetColor.g;
 currentColor.b = targetColor.b;
 
 setInterval(function(){
-  currentColor.r = targetColor.r * 0.01 + currentColor.r * 0.99;
-  currentColor.g = targetColor.g * 0.01 + currentColor.g * 0.99;
-  currentColor.b = targetColor.b * 0.01 + currentColor.b * 0.99;
+  currentColor.r = targetColor.r * 0.018 + currentColor.r * 0.982;
+  currentColor.g = targetColor.g * 0.018 + currentColor.g * 0.982;
+  currentColor.b = targetColor.b * 0.018 + currentColor.b * 0.982;
 }, 1000/60);
   
 
