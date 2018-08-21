@@ -232,11 +232,17 @@ thisW[i] = adjustedLength;
             {
                 hitIt(Math.min(1, Math.max(highCount / count, power / 64 / highCount)));
             }
-            logger.innerHTML = count + '<br>' + highCount + '<br>' + power + '<br>' + hitPercentage;
+            logger.innerHTML =
+                rgbToHex(currentColor) + '<br>' +
+                rgbToHex(targetColor) + '<br>' +
+                count + '<br>' +
+                highCount + '<br>'
+                + power + '<br>'
+                + hitPercentage;
 
             document.body.style.backgroundColor = rgbToHex(currentColor);
             
-            previousW = Object.assign(thisW);
+            previousW = thisW.slice();
 
 
 
@@ -272,20 +278,25 @@ function hitIt(percentage)
   shouldHit = false;
   hitPercentage = percentage;
   var a, b;
-  if (percentage > 0.55)
+  if (percentage > 0.65)
     {
-      a = 0.15;
-      b = 0.85;
+      a = 0.2;
+      b = 0.8;
     }
-  else if (percentage > 0.35)
+  else if (percentage > 0.5)
     {
       a = 0.25;
       b = 0.65;
     }
+  else if (percentage > 0.35)
+    {
+      a = 0.35;
+      b = 0.45;
+    }
   else
     {
-      a = 0.25;
-      b = 0.5;
+      a = 0.35;
+      b = 0.2;
     }
   currentColor = randomColor();
   
@@ -321,11 +332,9 @@ function hitIt(percentage)
     currentColor.b *= 0.3;
   }
 
-  targetColor = Object.assign(currentColor);
-  targetColor = currentColor;
-  targetColor.r *= 0.5;
-  targetColor.g *= 0.5;
-  targetColor.b *= 0.5;
+  targetColor.r = currentColor.r * 0.3;
+  targetColor.g = currentColor.g * 0.3;
+  targetColor.b = currentColor.b * 0.3;
   
   setTimeout(function(){
     shouldHit = true;
@@ -371,7 +380,9 @@ function periodicColor(){
 
 var periodicInt = setInterval(periodicColor, 3600);
 periodicColor();
-currentColor = Object.assign(targetColor);
+currentColor.r = targetColor.r;
+currentColor.g = targetColor.g;
+currentColor.b = targetColor.b;
 
 setInterval(function(){
   currentColor.r = targetColor.r * 0.01 + currentColor.r * 0.99;
