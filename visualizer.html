@@ -198,6 +198,7 @@ var previousW = [];
     var highCount = 0;
     var count = 0;
     var power = 0;
+    var powerDiff = 0;
 
 
             var adjustedLength;
@@ -210,13 +211,19 @@ var previousW = [];
 thisW[i] = adjustedLength;
 
       var diff = thisW[i] - previousW[i];
-      
+
       if (diff > 0)
       {
+        power += thisW[i];
         count++;
-        if (diff > 16)
+        if (i < 24 && diff > 8)
         {
-        power += diff;
+            powerDiff += diff;
+          highCount ++;
+        }
+        else if (diff > 16)
+        {
+            powerDiff += diff;
           highCount ++;
         }
       }
@@ -230,7 +237,7 @@ thisW[i] = adjustedLength;
 
             if (highCount >= 8)
             {
-                hitIt(Math.min(1, Math.max(highCount / count, power / 64 / highCount)));
+                hitIt(Math.min(1, Math.max(highCount / count, powerDiff / 64 / highCount, power / 200 / count)));
             }
             logger.innerHTML =
                 rgbToHex(currentColor) + '<br>' +
@@ -238,6 +245,7 @@ thisW[i] = adjustedLength;
                 count + '<br>' +
                 highCount + '<br>'
                 + power + '<br>'
+                + powerDiff + '<br>'
                 + hitPercentage;
 
             document.body.style.backgroundColor = rgbToHex(currentColor);
@@ -341,7 +349,7 @@ function hitIt(percentage)
   }, 1000/6);
 
   clearInterval(periodicInt);
-  periodicInt = setInterval(periodicColor, 3600);
+  periodicInt = setInterval(periodicColor, 4200);
 }
 
 function periodicColor(){
@@ -378,7 +386,7 @@ function periodicColor(){
   }
 }
 
-var periodicInt = setInterval(periodicColor, 3600);
+var periodicInt = setInterval(periodicColor, 4200);
 periodicColor();
 currentColor.r = targetColor.r;
 currentColor.g = targetColor.g;
